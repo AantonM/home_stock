@@ -25,7 +25,7 @@ public class Stock implements Serializable
   private Product product;
 
   @NotNull
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
   @JoinColumn(name = "unit_id")
   @ValidUnit
   private Unit unit;
