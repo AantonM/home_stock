@@ -1,5 +1,5 @@
 #Server properties:
-home_stock_service/src/main/resources/application-default.properties
+home_stock_service/src/main/resources/application-default.yaml
 
 HELP.md
 target/
