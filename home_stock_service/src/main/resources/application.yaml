@@ -1,0 +1,29 @@
+# -----------------------
+# DEFAULT CONNECTION POOL
+# -----------------------
+spring:
+  datasource:
+    hikari:
+      connection-timeout: 20000
+      maximumPoolSize: 5
+    # -----------------------
+    # POSTGRESQL DATABASE CONFIGURATION
+    # -----------------------
+    url: {url}
+    username: {username}
+    password: {password}
+  # -----------------------
+  # JPA properties
+  # -----------------------
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults=true: true
+      javax:
+        persistence:
+          validation:
+            #           Disable ConstraintValidator classes being validated by JPA and only by JSR-303
+            mode: none
