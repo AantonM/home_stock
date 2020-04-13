@@ -1,8 +1,10 @@
 package com.homestock.home_stock_service.controller;
 
 import com.homestock.home_stock_service.dao.StockRepository;
+import com.homestock.home_stock_service.domain.Product;
 import com.homestock.home_stock_service.domain.Stock;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +41,14 @@ public class StockController
   public void postNewStockList(@RequestBody @Valid List<Stock> stocks)
   {
     stockRepository.saveAll(stocks);
+  }
+
+  @PutMapping(path = "/update/{productId}", consumes = "application/json")
+  @ResponseStatus(HttpStatus.OK)
+  @Transactional
+  public void updateStockForProduct(@PathVariable String productId, @RequestBody Stock stock)
+  {
+    stockRepository.updateStockForProduct(Integer.valueOf(productId), stock.getUnit_quantity());
   }
 
 }

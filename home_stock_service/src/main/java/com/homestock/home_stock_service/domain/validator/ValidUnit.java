@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = UnitValidator.class)
 public @interface ValidUnit
 {
-  String message() default "Unit is not found. Please choose one of the following.";
+  String message() default "Selected unit does not exist. Please insert a valid unit.";
   Class<?>[] groups() default {};
   Class<? extends Payload>[] payload() default {};
 
