@@ -1,10 +1,13 @@
 package com.homestock.home_stock_service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.homestock.home_stock_service.domain.validator.ValidUnit;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -31,5 +34,5 @@ public class Stock implements Serializable
   private Unit unit;
 
   @NotNull
-  private int current_quantity;
+  private Integer current_quantity;
 }

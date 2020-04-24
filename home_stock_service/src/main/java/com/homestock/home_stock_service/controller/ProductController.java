@@ -16,12 +16,20 @@ public class ProductController
     this.productRepository = productRepository;
   }
 
+  /***
+   * Fetch all products.
+   * @return - a list of all products
+   */
   @GetMapping(path = "/products", produces = "application/json")
   public Iterable<Product> getAllProducts()
   {
     return productRepository.findAll();
   }
 
+  /***
+   * Cerate new product.
+   * @param product - the product
+   */
   @PostMapping(path = "/product", consumes = "application/json")
   public void postNewProduct(@RequestBody Product product)
   {
