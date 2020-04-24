@@ -1,5 +1,3 @@
--- noinspection SqlNoDataSourceInspectionForFile
-
 drop schema homestock CASCADE;
 
 CREATE SCHEMA homestock;
@@ -23,7 +21,18 @@ CREATE TABLE homestock.stock
     id INT GENERATED ALWAYS AS IDENTITY,
     product_id INT NOT NULL REFERENCES homestock.product(id),
     unit_id INT NOT NULL REFERENCES homestock.unit(id),
-    unit_quantity INT NOT NULL,
+    current_quantity INT NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE homestock.stock_movement
+(
+    id INT GENERATED ALWAYS AS IDENTITY,
+    stock_id INT NOT NULL REFERENCES homestock.stock(id),
+    date DATE NOT NULL,
+    quantity INT NOT NULL,
+    up BOOLEAN NOT NULL CHECK( up != down),
+    down BOOLEAN NOT NULL CHECK( down != up),
     PRIMARY KEY (id)
 );
 
@@ -37,6 +46,6 @@ INSERT INTO homestock.unit(name) VALUES ('piece');
 INSERT INTO homestock.unit(name) VALUES ('Length');
 INSERT INTO homestock.unit(name) VALUES ('pack');
 
-INSERT INTO homestock.stock(product_id, unit_id, unit_quantity) VALUES (1, 1, 50);
-INSERT INTO homestock.stock(product_id, unit_id, unit_quantity) VALUES (2, 1, 100);
-INSERT INTO homestock.stock(product_id, unit_id, unit_quantity) VALUES (3, 2, 28);
+INSERT INTO homestock.stock(product_id, unit_id, current_quantity) VALUES (1, 1, 50);
+INSERT INTO homestock.stock(product_id, unit_id, current_quantity) VALUES (2, 1, 100);
+INSERT INTO homestock.stock(product_id, unit_id, current_quantity) VALUES (3, 2, 28);

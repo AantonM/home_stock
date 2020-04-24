@@ -31,5 +31,5 @@ public class Stock implements Serializable
   private Unit unit;
 
   @NotNull
-  private int unit_quantity;
+  private int current_quantity;
 }

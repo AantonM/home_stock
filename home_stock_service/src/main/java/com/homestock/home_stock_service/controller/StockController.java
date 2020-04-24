@@ -48,7 +48,7 @@ public class StockController
   @Transactional
   public void updateStockForProduct(@PathVariable String productId, @RequestBody Stock stock)
   {
-    stockRepository.updateStockForProduct(Integer.valueOf(productId), stock.getUnit_quantity());
+    stockRepository.updateStockForProduct(Integer.valueOf(productId), stock.getCurrent_quantity());
   }
 
 }
