@@ -21,7 +21,7 @@ CREATE TABLE homestock.stock
     id INT GENERATED ALWAYS AS IDENTITY,
     product_id INT NOT NULL REFERENCES homestock.product(id),
     unit_id INT NOT NULL REFERENCES homestock.unit(id),
-    current_quantity INT NOT NULL,
+    current_quantity INT NOT NULL CHECK (current_quantity => 0),
     PRIMARY KEY (id)
 );
 

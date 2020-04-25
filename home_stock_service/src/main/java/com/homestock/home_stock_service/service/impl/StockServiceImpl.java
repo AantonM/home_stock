@@ -52,6 +52,7 @@ public class StockServiceImpl implements StockService
     public void increaseStock(Long productId, StockMovement stockValue)
     {
         Stock stockToUpdate = stockRepository.findStockByProductId(Long.valueOf(productId));
+
         int result = stockRepository.increaseStockForProduct(productId, stockValue.getQuantity());
         if (result == 0)
         {
@@ -64,12 +65,13 @@ public class StockServiceImpl implements StockService
     public void decreaseStock(Long productId, StockMovement stockValue)
     {
         Stock stockToUpdate = stockRepository.findStockByProductId(Long.valueOf(productId));
+
         int result = stockRepository.decreaseStockForProduct(productId, stockValue.getQuantity());
         if (result == 0)
         {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product id not found");
         }
-        stockMovementRepository.save(buildStockMovementForUpdate(stockToUpdate, stockValue, true, true));
+        stockMovementRepository.save(buildStockMovementForUpdate(stockToUpdate, stockValue, false, true));
     }
 
     private StockMovement buildStockMovementForUpdate(Stock stock, StockMovement stockMovement, boolean up, boolean down)
