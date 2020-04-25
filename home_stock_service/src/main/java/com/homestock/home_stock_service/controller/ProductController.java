@@ -3,17 +3,18 @@ package com.homestock.home_stock_service.controller;
 import com.homestock.home_stock_service.dao.ProductRepository;
 import com.homestock.home_stock_service.domain.Product;
 import com.homestock.home_stock_service.domain.Stock;
+import com.homestock.home_stock_service.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class ProductController
 {
-  ProductRepository productRepository;
+  ProductService productService;
 
-  public ProductController(ProductRepository productRepository)
+  public ProductController(ProductService productService)
   {
-    this.productRepository = productRepository;
+    this.productService = productService;
   }
 
   /***
@@ -23,7 +24,7 @@ public class ProductController
   @GetMapping(path = "/products", produces = "application/json")
   public Iterable<Product> getAllProducts()
   {
-    return productRepository.findAll();
+    return productService.getAllProducts();
   }
 
   /***
@@ -31,9 +32,9 @@ public class ProductController
    * @param product - the product
    */
   @PostMapping(path = "/product", consumes = "application/json")
-  public void postNewProduct(@RequestBody Product product)
+  public void createNewProduct(@RequestBody Product product)
   {
-    productRepository.save(product);
+    productService.createNewProduct(product);
   }
 
 }
