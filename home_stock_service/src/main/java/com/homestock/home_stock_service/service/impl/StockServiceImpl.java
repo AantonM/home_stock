@@ -4,15 +4,12 @@ import com.homestock.home_stock_service.dao.StockMovementRepository;
 import com.homestock.home_stock_service.dao.StockRepository;
 import com.homestock.home_stock_service.domain.Stock;
 import com.homestock.home_stock_service.domain.StockMovement;
-import com.homestock.home_stock_service.domain.StockValue;
 import com.homestock.home_stock_service.service.StockService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Date;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -52,24 +49,44 @@ public class StockServiceImpl implements StockService
     }
 
     @Override
-    public void updateStockOfProduct(String productId, StockValue stockValue)
+    public void increaseStock(Long productId, StockMovement stockValue)
     {
-        int result = stockRepository.updateStockForProduct(Integer.valueOf(productId), stockValue.getCurrent_quantity());
+        Stock stockToUpdate = stockRepository.findStockByProductId(Long.valueOf(productId));
+        int result = stockRepository.increaseStockForProduct(productId, stockValue.getQuantity());
         if (result == 0)
         {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product id not found");
         }
+        stockMovementRepository.save(buildStockMovementForUpdate(stockToUpdate, stockValue, true, false));
+    }
+
+    @Override
+    public void decreaseStock(Long productId, StockMovement stockValue)
+    {
+        Stock stockToUpdate = stockRepository.findStockByProductId(Long.valueOf(productId));
+        int result = stockRepository.decreaseStockForProduct(productId, stockValue.getQuantity());
+        if (result == 0)
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product id not found");
+        }
+        stockMovementRepository.save(buildStockMovementForUpdate(stockToUpdate, stockValue, true, true));
+    }
+
+    private StockMovement buildStockMovementForUpdate(Stock stock, StockMovement stockMovement, boolean up, boolean down)
+    {
+        stockMovement.setStock(stock);
+        stockMovement.setDate(new Date(System.currentTimeMillis()));
+        stockMovement.setUp(up);
+        stockMovement.setDown(down);
+        return stockMovement;
     }
 
     private StockMovement buildStockMovement(Stock stock)
     {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        LocalDate now = LocalDate.now();
-
         StockMovement stockmvmnt = new StockMovement();
         stockmvmnt.setStock(stock);
         stockmvmnt.setQuantity(stock.getCurrent_quantity());
-        stockmvmnt.setDate(new Date(now.getYear(), now.getMonthValue(), now.getDayOfMonth()));
+        stockmvmnt.setDate(new Date(System.currentTimeMillis()));
         stockmvmnt.setUp(true);
         stockmvmnt.setDown(false);
         return stockmvmnt;

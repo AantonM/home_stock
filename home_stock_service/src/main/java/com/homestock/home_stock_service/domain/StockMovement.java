@@ -17,12 +17,10 @@ public class StockMovement
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "stock_id")
     private Stock stock;
 
-    @NotNull
     private Date date;
 
     @NotNull

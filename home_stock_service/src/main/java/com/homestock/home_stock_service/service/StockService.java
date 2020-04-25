@@ -1,7 +1,7 @@
 package com.homestock.home_stock_service.service;
 
 import com.homestock.home_stock_service.domain.Stock;
-import com.homestock.home_stock_service.domain.StockValue;
+import com.homestock.home_stock_service.domain.StockMovement;
 
 import java.util.List;
 
@@ -13,5 +13,7 @@ public interface StockService
 
     void createNewStocksAndProducts(List<Stock> stock);
 
-    void updateStockOfProduct(String productId, StockValue stockValue);
+    void increaseStock(Long productId, StockMovement stockValue);
+
+    void decreaseStock(Long productId, StockMovement stockValue);
 }
