@@ -21,7 +21,7 @@ CREATE TABLE homestock.stock
     id INT GENERATED ALWAYS AS IDENTITY,
     product_id INT NOT NULL REFERENCES homestock.product(id),
     unit_id INT NOT NULL REFERENCES homestock.unit(id),
-    current_quantity INT NOT NULL CHECK (current_quantity => 0),
+    current_quantity INT NOT NULL CHECK (current_quantity >= 0),
     PRIMARY KEY (id)
 );
 
@@ -31,8 +31,7 @@ CREATE TABLE homestock.stock_movement
     stock_id INT NOT NULL REFERENCES homestock.stock(id),
     date DATE NOT NULL,
     quantity INT NOT NULL,
-    up BOOLEAN NOT NULL CHECK( up != down),
-    down BOOLEAN NOT NULL CHECK( down != up),
+    type INT NOT NULL,
     PRIMARY KEY (id)
 );
 
