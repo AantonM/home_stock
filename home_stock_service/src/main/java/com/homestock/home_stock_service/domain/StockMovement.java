@@ -26,7 +26,5 @@ public class StockMovement
     @NotNull
     private Integer quantity;
 
-    private boolean up;
-
-    private boolean down;
+    private Integer type;
 }

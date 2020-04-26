@@ -16,4 +16,6 @@ public interface StockService
     void increaseStock(Long productId, StockMovement stockValue);
 
     void decreaseStock(Long productId, StockMovement stockValue);
+
+    void updateStock(Long productId, StockMovement stockMovement);
 }

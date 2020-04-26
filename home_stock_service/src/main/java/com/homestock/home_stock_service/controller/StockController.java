@@ -3,6 +3,7 @@ package com.homestock.home_stock_service.controller;
 import com.homestock.home_stock_service.domain.Stock;
 import com.homestock.home_stock_service.domain.StockMovement;
 import com.homestock.home_stock_service.service.StockService;
+import lombok.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -63,7 +64,7 @@ public class StockController
     @PutMapping(path = "/stock/increase/{productId}", consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public void increaseStockForProduct(@PathVariable Long productId, @RequestBody @Valid StockMovement stockMovement)
+    public void increaseStock(@PathVariable Long productId, @RequestBody @Valid StockMovement stockMovement)
     {
         stockService.increaseStock(productId, stockMovement);
     }
@@ -76,9 +77,22 @@ public class StockController
     @PutMapping(path = "/stock/decrease/{productId}", consumes = "application/json")
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public void decreaseStockForProduct(@PathVariable Long productId, @RequestBody @Valid StockMovement stockMovement)
+    public void decreaseStock(@PathVariable Long productId, @RequestBody @Valid StockMovement stockMovement)
     {
         stockService.decreaseStock(productId, stockMovement);
+    }
+
+    /***
+     * Override the current stock quantity of a product.
+     * @param productId - the product ID
+     * @param stockMovement - the new stock quantity
+     */
+    @PutMapping(path="/stock/update/{productId}", consumes="application/json")
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public void updateStock(@PathVariable Long productId, @RequestBody @Valid StockMovement stockMovement)
+    {
+        stockService.updateStock(productId, stockMovement);
     }
 }
 

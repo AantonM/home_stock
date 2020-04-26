@@ -1,5 +1,6 @@
 package com.homestock.home_stock_service.service.impl;
 
+import com.homestock.home_stock_service.dao.StockMovementConstants;
 import com.homestock.home_stock_service.dao.StockMovementRepository;
 import com.homestock.home_stock_service.dao.StockRepository;
 import com.homestock.home_stock_service.domain.Stock;
@@ -11,6 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Date;
 import java.util.List;
+
+import static com.homestock.home_stock_service.dao.StockMovementConstants.*;
 
 @Service
 public class StockServiceImpl implements StockService
@@ -49,37 +52,49 @@ public class StockServiceImpl implements StockService
     }
 
     @Override
-    public void increaseStock(Long productId, StockMovement stockValue)
+    public void increaseStock(Long productId, StockMovement stockMovement)
     {
         Stock stockToUpdate = stockRepository.findStockByProductId(Long.valueOf(productId));
 
-        int result = stockRepository.increaseStockForProduct(productId, stockValue.getQuantity());
+        int result = stockRepository.increaseStockForProduct(productId, stockMovement.getQuantity());
         if (result == 0)
         {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product id not found");
         }
-        stockMovementRepository.save(buildStockMovementForUpdate(stockToUpdate, stockValue, true, false));
+        stockMovementRepository.save(buildStockMovementForUpdate(stockToUpdate, stockMovement, STOCK_MOVEMENT_UP));
     }
 
     @Override
-    public void decreaseStock(Long productId, StockMovement stockValue)
+    public void decreaseStock(Long productId, StockMovement stockMovement)
     {
         Stock stockToUpdate = stockRepository.findStockByProductId(Long.valueOf(productId));
 
-        int result = stockRepository.decreaseStockForProduct(productId, stockValue.getQuantity());
+        int result = stockRepository.decreaseStockForProduct(productId, stockMovement.getQuantity());
         if (result == 0)
         {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product id not found");
         }
-        stockMovementRepository.save(buildStockMovementForUpdate(stockToUpdate, stockValue, false, true));
+        stockMovementRepository.save(buildStockMovementForUpdate(stockToUpdate, stockMovement, STOCK_MOVEMENT_DOWN));
     }
 
-    private StockMovement buildStockMovementForUpdate(Stock stock, StockMovement stockMovement, boolean up, boolean down)
+    @Override
+    public void updateStock(Long productId, StockMovement stockMovement)
+    {
+        Stock stockToUpdate = stockRepository.findStockByProductId(Long.valueOf(productId));
+
+        int result = stockRepository.updateStockForProduct(productId, stockMovement.getQuantity());
+        if (result == 0)
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product id not found");
+        }
+        stockMovementRepository.save(buildStockMovementForUpdate(stockToUpdate, stockMovement, STOCK_MOVEMENT_OVERRIDE));
+    }
+
+    private StockMovement buildStockMovementForUpdate(Stock stock, StockMovement stockMovement, Integer type)
     {
         stockMovement.setStock(stock);
         stockMovement.setDate(new Date(System.currentTimeMillis()));
-        stockMovement.setUp(up);
-        stockMovement.setDown(down);
+        stockMovement.setType(type);
         return stockMovement;
     }
 
@@ -89,8 +104,7 @@ public class StockServiceImpl implements StockService
         stockmvmnt.setStock(stock);
         stockmvmnt.setQuantity(stock.getCurrent_quantity());
         stockmvmnt.setDate(new Date(System.currentTimeMillis()));
-        stockmvmnt.setUp(true);
-        stockmvmnt.setDown(false);
+        stockmvmnt.setType(STOCK_MOVEMENT_UP);
         return stockmvmnt;
     }
 }
